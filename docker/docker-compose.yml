@@ -1,0 +1,52 @@
+services:
+  app:  # domain_api
+    build: .
+    container_name: laravel_app
+    working_dir: /var/www/html
+    volumes:
+      - ../src:/var/www/html  # Поднимаемся на уровень выше к src
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      APP_ENV: local
+    networks:
+      - laravel
+
+  webserver:  # domain_apache
+    image: httpd:2.4-alpine
+    container_name: laravel_webserver
+    ports:
+      - "8000:80"
+    volumes:
+      - ../src/:/var/www/html
+      - ./apache/000-default.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
+    networks:
+      - laravel
+#    depends_on:
+#      - app
+
+  db:
+    image: postgres:15-alpine
+    container_name: laravel_db
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+#      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - laravel
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
