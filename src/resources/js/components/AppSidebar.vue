@@ -9,25 +9,40 @@ import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
+    // {
+    //     title: 'Dashboard',
+    //     href: '/dashboard',
+    //     icon: LayoutGrid,
+    // },
     {
-        title: 'Dashboard',
-        href: '/dashboard',
+        title: 'Лицензии',
+        href: '/licence',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Оборудование',
+        href: '/facility',
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Сотрудники',
+        href: '/employee',
         icon: LayoutGrid,
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
-    },
-];
+// const footerNavItems: NavItem[] = [
+//     {
+//         title: 'Github Repo',
+//         href: 'https://github.com/laravel/vue-starter-kit',
+//         icon: Folder,
+//     },
+//     {
+//         title: 'Documentation',
+//         href: 'https://laravel.com/docs/starter-kits#vue',
+//         icon: BookOpen,
+//     },
+// ];
 </script>
 
 <template>
@@ -49,7 +64,7 @@ const footerNavItems: NavItem[] = [
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
+<!--            <NavFooter :items="footerNavItems" />-->
             <NavUser />
         </SidebarFooter>
     </Sidebar>
