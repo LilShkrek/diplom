@@ -11,7 +11,7 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware([])->group(function () {
+Route::middleware(['auth', 'role:operator|manager', 'permission:licences.view|facilities.view|employees.view'])->group(function () {
     require __DIR__ . '/licence.php';
     require __DIR__ . '/facility.php';
     require __DIR__ . '/employee.php';

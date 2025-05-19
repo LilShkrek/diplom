@@ -76,7 +76,7 @@ const submit = () => {
 
                             <!-- Выпадающий список "Объект" -->
                             <div>
-                                <Label for="facility_id" class="text-black">Объект</Label>
+                                <Label for="facility_id" class="text-black">Оборудование</Label>
                                 <select
                                     id="facility_id"
                                     v-model="form.facility_id"

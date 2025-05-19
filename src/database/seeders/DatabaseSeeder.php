@@ -15,9 +15,22 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        User::factory()->create([           //TODO:: Добавить, чтобы при создании пользователя ему администратор сразу выдавал роль, также нужен круд для пользователей, чтобы администратор могу взаимодействовать с их данными
+            'name' => 'admin',
+            'email' => 'admin@mail.ru',
+            'password' => 'admin'
+        ]);
+
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'operator',
+            'email' => 'operator@mail.ru',
+            'password' => 'operator'
+        ]);
+
+        User::factory()->create([
+            'name' => 'manager',
+            'email' => 'manager@mail.ru',
+            'password' => 'manager'
         ]);
     }
 }

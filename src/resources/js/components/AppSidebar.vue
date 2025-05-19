@@ -8,7 +8,7 @@ import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, LayoutGrid } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: NavItem[] = [       //TODO:: убрать комментарии
     // {
     //     title: 'Dashboard',
     //     href: '/dashboard',
@@ -51,9 +51,9 @@ const mainNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="route('dashboard')">
-                            <AppLogo />
-                        </Link>
+<!--                        <Link :href="route('dashboard')">-->
+<!--                            <AppLogo />-->
+<!--                        </Link>-->
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>

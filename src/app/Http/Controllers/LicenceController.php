@@ -48,7 +48,7 @@ class LicenceController extends Controller
     }
 
     // Просмотр
-    public function show(Licence $licence)
+    public function show(Licence $licence)          // TODO:: добавить просмотр каждой лицензии отдельно (аналогично остальным сущностям)
     {
         return Inertia::render('Licence/Show', compact('licence'));
     }

@@ -26,11 +26,12 @@ defineProps({ licences: Object });
                         </Link>
                     </div>
 
+<!--                    TODO:: ДОБАВИТЬ ФИЛЬТРАЦИЮ ПО СТОЛБЦАМ-->
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left">Название</th>
-                            <th class="px-6 py-3 text-left">Объект</th>
+                            <th class="px-6 py-3 text-left">Оборудование</th>
                             <th class="px-6 py-3 text-left">Действует до</th>
                             <th class="px-6 py-3 text-left">Действия</th>
                         </tr>

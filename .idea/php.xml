@@ -144,6 +144,7 @@
       <path value="$PROJECT_DIR$/src/vendor/symfony/uid" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/polyfill-uuid" />
       <path value="$PROJECT_DIR$/src/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/src/vendor/spatie/laravel-permission" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2">
@@ -151,6 +152,11 @@
   </component>
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/src/phpunit.xml" custom_loader_path="$PROJECT_DIR$/src/vendor/autoload.php" paratest_path="$PROJECT_DIR$/src/vendor/bin/paratest_for_phpstorm" use_configuration_file="true" />
+    </phpunit_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />
