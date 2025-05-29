@@ -20,6 +20,9 @@ return new class extends Migration
                 ->string('name')
                 ->comment('Название оборудования');
             $table
+                ->string('status')
+                ->comment('Состояние оборудования');
+            $table
                 ->dateTimeTz('buy_date')
                 ->comment('Дата покупки оборудования');
             $table

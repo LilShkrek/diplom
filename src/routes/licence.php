@@ -16,5 +16,5 @@ $commonMiddleware = [];
 //    });
 
 Route::middleware($commonMiddleware)->group(function () {
-    Route::resource('licence', LicenceController::class)->except(['show']); // Если show не нужен
+    Route::resource('licence', LicenceController::class);
 });

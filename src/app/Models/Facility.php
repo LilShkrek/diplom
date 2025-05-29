@@ -15,6 +15,7 @@ class Facility extends Model
 
     protected $fillable = [
         'name',
+        'status',
         'buy_date',
         'operation_end_date',
         'inventory_num',

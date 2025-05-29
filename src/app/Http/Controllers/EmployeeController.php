@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Employee;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -12,13 +13,37 @@ class EmployeeController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorize('viewAny', Employee::class);
+        $query = Employee::query();
 
-        $employees = Employee::latest()->paginate(10);
-        return Inertia::render('Employee/Index', compact('employees'));
+        // Поиск по фамилии
+        if ($request->filled('search')) {
+            $query->where('surname', 'like', '%' . $request->search . '%');
+        }
+
+        // Сортировка
+        $sort = $request->get('sort', 'created_at'); // по умолчанию сортировка по дате создания
+        $direction = $request->get('direction', 'desc');
+
+        // Разрешённые поля сортировки
+        $allowedSorts = ['name', 'surname', 'patronymic', 'position', 'service_number', 'created_at'];
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        $query->orderBy($sort, $direction);
+
+        // Пагинация
+        $employees = $query->paginate(10)->withQueryString();
+
+        return Inertia::render('Employee/Index', [
+            'employees' => $employees,
+            'filters' => $request->only(['search', 'sort', 'direction']),
+        ]);
     }
+
+
 
     public function create()
     {

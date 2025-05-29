@@ -9,6 +9,7 @@ const props = defineProps({ employees: Array });
 
 const form = useForm({
     name: '',
+    status: '',
     buy_date: new Date().toISOString().split('T')[0],
     operation_end_date: '',
     inventory_num: '',
@@ -49,6 +50,21 @@ const submit = () => {
                                 <InputError :message="form.errors.name" />
                             </div>
 
+                            <!-- Состояние -->
+                            <div>
+                                <Label for="status" class="text-black">Состояние</Label>
+                                <Input
+                                    id="status"
+                                    type="text"
+                                    required
+                                    autofocus
+                                    :tabindex="2"
+                                    v-model="form.status"
+                                    class="mt-1 block w-full text-black"
+                                />
+                                <InputError :message="form.errors.status" />
+                            </div>
+
                             <!-- Инвентарный номер -->
                             <div>
                                 <Label for="inventory_num" class="text-black">Инвентарный номер</Label>
@@ -57,7 +73,7 @@ const submit = () => {
                                     type="number"
                                     required
                                     autofocus
-                                    :tabindex="2"
+                                    :tabindex="3"
                                     v-model="form.inventory_num"
                                     class="mt-1 block w-full text-black"
                                 />
@@ -73,7 +89,7 @@ const submit = () => {
                                         type="date"
                                         required
                                         autofocus
-                                        :tabindex="3"
+                                        :tabindex="4"
                                         v-model="form.buy_date"
                                         class="mt-1 block w-full text-black"
                                     />
@@ -86,7 +102,7 @@ const submit = () => {
                                         type="date"
                                         required
                                         autofocus
-                                        :tabindex="4"
+                                        :tabindex="5"
                                         v-model="form.operation_end_date"
                                         class="mt-1 block w-full text-black"
                                     />
@@ -94,17 +110,21 @@ const submit = () => {
                                 </div>
                             </div>
 
-                            <!-- Ответственный -->
+                            <!-- Выпадающий список "Ответственный" -->
                             <div>
-                                <Label for="employee_id" class="text-black">Ответственный</Label>
+                                <Label for="employee_id" class="text-black">Сотрудник</Label>
                                 <select
                                     id="employee_id"
                                     v-model="form.employee_id"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                 >
-                                    <option value="">Выберите пользователя</option>
-                                    <option v-for="employee in employees" :key="employee.id" :value="employee.id">
-                                        {{ employee.surname }}
+                                    <option value="">Не выбрано</option>
+                                    <option
+                                        v-for="employee in employees"
+                                        :key="employee.id"
+                                        :value="employee.id"
+                                    >
+                                        {{ employee.surname }} {{ employee.name }} {{ employee.patronymic }}
                                     </option>
                                 </select>
                                 <InputError :message="form.errors.employee_id" />

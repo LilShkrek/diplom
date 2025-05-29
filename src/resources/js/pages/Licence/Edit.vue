@@ -19,7 +19,7 @@ const form = useForm({
     buy_date: props.licence.buy_date.split(' ')[0], // Оставляем только дату (без времени)
     start_date: props.licence.start_date.split(' ')[0],
     end_date: props.licence.end_date.split(' ')[0],
-    facility_id: props.licence.facility_id,
+    facility_id: props.licence.facility_id ?? '',
 });
 
 // Отправка формы
@@ -73,7 +73,7 @@ const submit = () => {
                                 <InputError :message="form.errors.key" />
                             </div>
 
-                            <!-- Выпадающий список "Объект" -->
+                            <!-- Выпадающий список "Оборудование" -->
                             <div>
                                 <Label for="facility_id" class="text-black">Оборудование</Label>
                                 <select
@@ -81,12 +81,11 @@ const submit = () => {
                                     v-model="form.facility_id"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                 >
-                                    <option value="">Выберите объект</option>
+                                    <option value="">Не выбрано</option>
                                     <option
                                         v-for="facility in facilities"
                                         :key="facility.id"
                                         :value="facility.id"
-                                        :selected="facility.id === form.facility_id"
                                     >
                                         {{ facility.name }}
                                     </option>

@@ -15,6 +15,12 @@ class FacilityRequest extends FormRequest
                 'string',
                 'max:200'
             ],
+            'status' => [
+                'bail',
+                'required',
+                'string',
+                'max:200'
+            ],
             'buy_date' => [
                 'bail',
                 'required',

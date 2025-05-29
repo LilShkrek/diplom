@@ -6,6 +6,7 @@ use App\Http\Requests\FacilityRequest;
 use App\Models\Employee;
 use App\Models\Facility;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,13 +14,33 @@ class FacilityController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorize('viewAny', Facility::class);
+        $query = Facility::with('employee');
 
-        $facilities = Facility::with('employee')->latest()->paginate(10);
-        return Inertia::render('Facility/Index', compact('facilities'));
+        // Фильтрация по запросу
+        if ($request->filled('search')) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        // Сортировка
+        $sortColumn = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+        if (in_array($sortColumn, ['name', 'status', 'inventory_num', 'buy_date', 'operation_end_date'])) {
+            $query->orderBy($sortColumn, $sortDirection);
+        }
+
+        return Inertia::render('Facility/Index', [
+            'facilities' => $query->paginate(10)->withQueryString(),
+            'filters' => $request->only('search'),
+            'sort' => [
+                'column' => $sortColumn,
+                'direction' => $sortDirection,
+            ],
+            'employees' => Employee::all(['id', 'name']),
+        ]);
     }
+
 
     public function create()
     {
@@ -41,6 +62,7 @@ class FacilityController extends Controller
     {
         $this->authorize('view', $facility);
 
+        $facility->load('employee');
         return Inertia::render('Facility/Show', compact('facility'));
     }
 

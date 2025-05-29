@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -14,23 +15,59 @@ class UserController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', User::class);
 
-        return Inertia::render('User/Index', [
-            'users' => User::with('roles')
-                ->latest()
-                ->paginate(10)
-                ->through(fn($user) => [
+        $sortColumn = $request->get('sort', 'created_at');
+        $sortDirection = $request->get('direction', 'desc');
+
+        // Старт запроса
+        $query = User::query()->select('users.*');
+
+        // Поиск по имени
+        if ($request->filled('search')) {
+            $query->where('users.name', 'like', '%' . $request->search . '%');
+        }
+
+        // Сортировка
+        if ($sortColumn === 'role') {
+            $query->leftJoin('model_has_roles', function ($join) {
+                $join->on('users.id', '=', 'model_has_roles.model_id')
+                    ->where('model_has_roles.model_type', User::class);
+            })
+                ->leftJoin('roles', 'model_has_roles.role_id', '=', 'roles.id')
+                ->orderBy('roles.name', $sortDirection)
+                ->addSelect('roles.name as role_name');
+        } elseif (in_array($sortColumn, ['name', 'email', 'created_at'])) {
+            $query->orderBy("users.$sortColumn", $sortDirection);
+        }
+
+        // Пагинация и сбор данных
+        $users = $query->with('roles')
+            ->paginate(10)
+            ->withQueryString()
+            ->through(function ($user) {
+                return [
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'roles' => $user->getRoleNames(),
                     'created_at' => $user->created_at->format('d.m.Y'),
-                ])
+                ];
+            });
+
+        return Inertia::render('User/Index', [
+            'users' => $users,
+            'filters' => $request->only('search'),
+            'sort' => [
+                'column' => $sortColumn,
+                'direction' => $sortDirection,
+            ],
         ]);
     }
+
+
 
     public function create()
     {
@@ -61,9 +98,16 @@ class UserController extends Controller
         $this->authorize('view', $user);
 
         return Inertia::render('User/Show', [
-            'user' => $user->load('roles'),
-            'permissions' => $user->getAllPermissions()->pluck('name')
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at->toDateTimeString(),
+                'role' => $user->getRoleNames()->first(),
+            ],
+            'permissions' => $user->getAllPermissions()->pluck('name'),
         ]);
+
     }
 
     public function edit(User $user)

@@ -74,7 +74,7 @@ const submit = () => {
                                 <InputError :message="form.errors.key" />
                             </div>
 
-                            <!-- Выпадающий список "Объект" -->
+                            <!-- Выпадающий список "Оборудование" -->
                             <div>
                                 <Label for="facility_id" class="text-black">Оборудование</Label>
                                 <select
@@ -82,8 +82,12 @@ const submit = () => {
                                     v-model="form.facility_id"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
                                 >
-                                    <option value="" disabled>Выберите объект</option>
-                                    <option v-for="facility in facilities" :key="facility.id" :value="facility.id">
+                                    <option value="">Не выбрано</option>
+                                    <option
+                                        v-for="facility in facilities"
+                                        :key="facility.id"
+                                        :value="facility.id"
+                                    >
                                         {{ facility.name }}
                                     </option>
                                 </select>

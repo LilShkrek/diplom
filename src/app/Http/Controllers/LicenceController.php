@@ -6,19 +6,43 @@ use App\Models\Facility;
 use App\Models\Licence;
 use App\Http\Requests\LicenceRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class LicenceController extends Controller
 {
     use AuthorizesRequests;
-
-    public function index()
+    public function index(Request $request)
     {
-        $this->authorize('viewAny', Licence::class);
+        $query = Licence::with('facility');
 
-        $licences = Licence::with('facility')->latest()->paginate(10);
-        return Inertia::render('Licence/Index', compact('licences'));
+        // Поиск по названию
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Сортировка
+        $sort = $request->get('sort', 'created_at'); // по умолчанию сортировка по дате создания
+        $direction = $request->get('direction', 'desc');
+
+        // Проверка допустимых полей сортировки
+        $allowedSorts = ['name', 'key', 'buy_date', 'start_date', 'end_date', 'facility_id', 'created_at'];
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        $query->orderBy($sort, $direction);
+
+        // Пагинация
+        $licences = $query->paginate(10)->withQueryString();
+
+        return Inertia::render('Licence/Index', [
+            'licences' => $licences,
+            'filters' => $request->only(['search', 'sort', 'direction']),
+        ]);
     }
+
+
 
     public function create()
     {
