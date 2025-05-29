@@ -29,6 +29,11 @@ const mainNavItems: NavItem[] = [       //TODO:: убрать комментар
         href: '/employee',
         icon: LayoutGrid,
     },
+    {
+        title: 'Пользователи',
+        href: '/user',
+        icon: LayoutGrid
+    }
 ];
 
 // const footerNavItems: NavItem[] = [

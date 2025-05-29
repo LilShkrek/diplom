@@ -17,5 +17,9 @@ Route::middleware(['auth', 'role:operator|manager', 'permission:licences.view|fa
     require __DIR__ . '/employee.php';
 });
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    require __DIR__ . '/user.php';
+});
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
