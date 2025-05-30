@@ -16,5 +16,6 @@ $commonMiddleware = [];
 //    });
 
 Route::middleware($commonMiddleware)->group(function () {
+    Route::get('/licence/export', [\App\Http\Controllers\LicenceController::class, 'export'])->name('licence.export');
     Route::resource('licence', LicenceController::class);
 });

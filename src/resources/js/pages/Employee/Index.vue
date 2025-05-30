@@ -45,6 +45,14 @@ const updateSearch = (e) => {
                     <!-- Верхняя панель -->
                     <div class="flex justify-between mb-6">
                         <h3 class="text-lg font-medium">Список сотрудников</h3>
+
+                        <a
+                            :href="route('user.export')"
+                            class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm"
+                        >
+                            Экспортировать
+                        </a>
+
                         <Link
                             :href="route('employee.create')"
                             class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

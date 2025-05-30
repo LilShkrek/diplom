@@ -7,8 +7,8 @@ use App\Models\Employee;
 use App\Models\Facility;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class FacilityController extends Controller
 {
@@ -88,5 +88,21 @@ class FacilityController extends Controller
 
         $facility->delete();
         return redirect()->route('facility.index')->with('success', 'Оборудование удалено!');
+    }
+
+    public function export()
+    {
+        $facilities = Facility::with('employee')->get();
+
+        $csv = "Название,Дата покупки,Окончание эксплуатации,Инвентарный номер,Статус,Сотрудник\n";
+
+        foreach ($facilities as $facility) {
+            $csv .= "{$facility->name},{$facility->buy_date},{$facility->operation_end_date},{$facility->inventory_num},{$facility->status}," . ($facility->employee->name ?? '—') . "\n";
+        }
+
+        return Response::make($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="facilities.csv"',
+        ]);
     }
 }

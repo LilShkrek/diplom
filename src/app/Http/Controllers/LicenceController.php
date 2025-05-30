@@ -7,6 +7,7 @@ use App\Models\Licence;
 use App\Http\Requests\LicenceRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
 
 class LicenceController extends Controller
@@ -89,5 +90,23 @@ class LicenceController extends Controller
 
         $licence->delete();
         return redirect()->route('licence.index')->with('success', 'Лицензия удалена!');
+    }
+
+    public function export()
+    {
+        $this->authorize('viewAny', Licence::class);
+
+        $licences = Licence::with('facility')->get();
+
+        $csv = "Название,Ключ,Дата покупки,Начало действия,Окончание действия,Оборудование\n";
+
+        foreach ($licences as $licence) {
+            $csv .= "{$licence->name},{$licence->key},{$licence->buy_date},{$licence->start_date},{$licence->end_date}," . ($licence->facility->name ?? '—') . "\n";
+        }
+
+        return Response::make($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="licences.csv"',
+        ]);
     }
 }

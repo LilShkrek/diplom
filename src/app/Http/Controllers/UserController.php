@@ -7,9 +7,13 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UserController extends Controller
 {
@@ -66,8 +70,6 @@ class UserController extends Controller
             ],
         ]);
     }
-
-
 
     public function create()
     {
@@ -152,4 +154,21 @@ class UserController extends Controller
 
         return redirect()->route('user.index')->with('success', 'Пользователь удален!');
     }
+
+    public function export()
+    {
+        $users = User::with('roles')->get();
+
+        $csv = "Имя,Email,Роль\n";
+
+        foreach ($users as $user) {
+            $csv .= "{$user->name},{$user->email}," . $user->roles->pluck('name')->join('|') . "\n";
+        }
+
+        return Response::make($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="users.csv"',
+        ]);
+    }
+
 }

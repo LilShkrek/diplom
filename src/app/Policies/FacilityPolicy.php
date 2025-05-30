@@ -31,4 +31,9 @@ class FacilityPolicy
     {
         return $user->hasRole('operator');
     }
+
+    public function export(User $user): bool
+    {
+        return $user->hasRole(['operator', 'manager']);
+    }
 }

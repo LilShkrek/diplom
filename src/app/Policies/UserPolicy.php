@@ -31,4 +31,9 @@ class UserPolicy
         // Админ не может удалить самого себя
         return $user->hasRole('admin') && $user->id !== $model->id;
     }
+
+    public function export(User $user): bool
+    {
+        return $user->hasRole('admin');
+    }
 }

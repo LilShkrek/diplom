@@ -6,8 +6,8 @@ use App\Http\Requests\EmployeeRequest;
 use App\Models\Employee;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Inertia\Inertia;
-use Inertia\Response;
 
 class EmployeeController extends Controller
 {
@@ -88,5 +88,23 @@ class EmployeeController extends Controller
 
         $employee->delete();
         return redirect()->route('employee.index')->with('success', 'Оборудование удалено!');
+    }
+
+    public function export()
+    {
+        $this->authorize('export', Employee::class);
+
+        $employees = Employee::all();
+
+        $csv = "Фамилия,Имя,Отчество,Должность,Табельный номер\n";
+
+        foreach ($employees as $employee) {
+            $csv .= "{$employee->surname},{$employee->name},{$employee->patronymic},{$employee->position},{$employee->service_number}\n";
+        }
+
+        return response($csv, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=employees.csv',
+        ]);
     }
 }
