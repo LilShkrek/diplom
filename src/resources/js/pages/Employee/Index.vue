@@ -47,7 +47,7 @@ const updateSearch = (e) => {
                         <h3 class="text-lg font-medium">Список сотрудников</h3>
 
                         <a
-                            :href="route('user.export')"
+                            :href="route('employee.export')"
                             class="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700 text-sm"
                         >
                             Экспортировать
