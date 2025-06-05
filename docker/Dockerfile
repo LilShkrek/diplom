@@ -23,6 +23,9 @@ RUN docker-php-ext-install \
     zip \
     sockets
 
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN a2enmod rewrite
@@ -32,24 +35,11 @@ RUN chmod -R 775 /var/www/html
 RUN chown -R www-data:www-data /var/www/html
 
 #COPY --chown=www-data:www-data ../src /var/www/html
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/*.conf
+RUN #sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/*.conf
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/*.conf && \
     a2ensite 000-default.conf
 
-#FROM php:8.2-apache
-#
-## Установка зависимостей
-#RUN apt-get update && apt-get install -y \
-#    libpq-dev \
-#    libzip-dev \
-#    zip \
-#    && docker-php-ext-install pdo pdo_pgsql zip
-#
-## Настройка Apache
-#RUN a2enmod rewrite
-#RUN mkdir -p /var/www/html
-#WORKDIR /var/www/html
-#
-## Права для storage (будет перезаписано volume)
-#RUN chown -R www-data:www-data /var/www/html
+RUN mkdir -p storage bootstrap/cache \
+ && chown -R www-data:www-data storage bootstrap/cache \
+ && chmod -R 775 storage bootstrap/cache

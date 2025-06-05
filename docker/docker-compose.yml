@@ -1,10 +1,14 @@
 services:
-  app:  # domain_api
+  app:
     build: .
     container_name: laravel_app
     working_dir: /var/www/html
+    ports:
+      - "8000:80"
+      - "5173:5173"
     volumes:
-      - ../src:/var/www/html  # Поднимаемся на уровень выше к src
+      - ../src:/var/www/html
+      - ./apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -15,19 +19,6 @@ services:
     networks:
       - laravel
 
-  webserver:  # domain_apache
-    image: httpd:2.4-alpine
-    container_name: laravel_webserver
-    ports:
-      - "8000:80"
-    volumes:
-      - ../src/:/var/www/html
-      - ./apache/000-default.conf:/usr/local/apache2/conf/extra/httpd-vhosts.conf
-    networks:
-      - laravel
-#    depends_on:
-#      - app
-
   db:
     image: postgres:15-alpine
     container_name: laravel_db
@@ -37,7 +28,6 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data
-#      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5433:5432"
     networks:
